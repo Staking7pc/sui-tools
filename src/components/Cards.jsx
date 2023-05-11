@@ -6,7 +6,7 @@
             <body>
                 <div class="container">
                     <div class="heading">
-                        <h4>RPC Stats for SUI</h4>
+                        <h4>RPC Stats for Sui</h4>
                     </div>
                     <div class="row">
                         <div class="card">

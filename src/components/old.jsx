@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import './RpcStatus.css'
+import copy from './copy-icon.png'
+function RpcStatus(props) {
 
-function RpcStatus1(props) {
-  var lagging={};
   const headers = [
     { key: "rpcUrl", label: "END-POINT" },
     // { key: "time", label: "LAST-CHECKED" },
     { key: "checkpoint", label: "CHECKPOINT" },
-  ];  
+  ];
   const [rpcDetails, setRpcDetails] = useState([]);
   const [order, setOrder] = useState('ASC');
   const [time1, settime] = useState();
   const [isCopied, setIsCopied] = useState(false);
-  const [maxCheckpoint, setMaxCheckpoint] = useState(null);
 
   const handleCopyClick = (text) => {
     navigator.clipboard.writeText(text);
@@ -36,23 +35,15 @@ function RpcStatus1(props) {
       setRpcDetails(sorted)
       setOrder('ASC')
     }
+
   }
 
   function setEventDetails() {
     axios.get("https://sui-tools.brightlystake.com/api/sui/rpcstatus")
       .then((res) => {
-        setRpcDetails(res.data);
-        settime(res.data[2].time);
-
-        // Get the maximum checkpoint value
-        let max = null;
-        for (const rpc of res.data) {
-          const checkpoint = parseFloat(rpc.checkpoint);
-          if (!isNaN(checkpoint) && (max === null || checkpoint > max)) {
-            max = checkpoint;
-          }
-        }
-        setMaxCheckpoint(max);
+        setRpcDetails(res.data)
+        console.log(res.data[2].time)
+        settime(res.data[2].time)
       });
   }
 
@@ -60,10 +51,14 @@ function RpcStatus1(props) {
     setEventDetails();
   }, [])
 
+
   return (
     <div>
       <h4 className='header1'> Last checked on {time1} UTC</h4>
+      <h4 className='header1'> Note: There could be few milli-second differences between calls so checkpoint wont be the same </h4>
+
       <table id='validators'>
+
         <thead>
           <tr className='header'>
             {headers.map((row) => {
@@ -74,15 +69,12 @@ function RpcStatus1(props) {
         <tbody>
           {
             rpcDetails.map((val) => {
-              const checkpoint = parseFloat(val.checkpoint);
-              const isLessThanFive = !isNaN(checkpoint) && maxCheckpoint !== null && (maxCheckpoint - checkpoint) < 5;
-              lagging[val.rpcUrl]=isLessThanFive;
-
               return (
-                <tr className={(String(val.checkpoint).includes("Error")) ? "error" : (lagging[val.rpcUrl]!=true?'warn':'NO')} key={val.moniker}>
+                <tr className={(String(val.checkpoint).includes("Error")) ? "error" : 'NO'} key={val.moniker}>
                   <td class="tooltip" onClick={() => handleCopyClick(val.rpcUrl)}>{val.rpcUrl}
                     <span class="tooltiptext">Click to copy</span>
                   </td>
+                  {/* <td>{val.time}</td> */}
                   <td>{val.checkpoint}</td>
                 </tr>
               )
@@ -94,5 +86,5 @@ function RpcStatus1(props) {
   )
 }
 
-export default RpcStatus1
+export default RpcStatus
 

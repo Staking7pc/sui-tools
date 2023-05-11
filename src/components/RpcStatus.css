@@ -6,6 +6,10 @@
   table#validators tbody tr.error {
     background-color: #f3e2dd;
   }
+
+  table#validators tbody tr.warn {
+    background-color: #f5f3d6;
+  }
   #validators {
     border-collapse: collapse;
     margin: 25px 25px;
