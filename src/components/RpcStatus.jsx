@@ -75,7 +75,7 @@ function RpcStatus1(props) {
           {
             rpcDetails.map((val) => {
               const checkpoint = parseFloat(val.checkpoint);
-              const isLessThanFive = !isNaN(checkpoint) && maxCheckpoint !== null && (maxCheckpoint - checkpoint) < 5;
+              const isLessThanFive = !isNaN(checkpoint) && maxCheckpoint !== null && (maxCheckpoint - checkpoint) < 10;
               lagging[val.rpcUrl]=isLessThanFive;
 
               return (
